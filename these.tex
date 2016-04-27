@@ -13,27 +13,89 @@
 %% Packages usuels
 %% ------------------------
 
-%% Pour utiliser les caractères accentués. Assurez-vous que
-%% votre éditeur texte sauvegarde les fichiers en utilisant l'encodage UTF-8
 \usepackage[utf8]{inputenc}
-
-%% Pour les titres de chapitres + coupures de mots en français
-\usepackage[french]{babel}
-
-%% Pour les citations de type (Auteur, année) plutôt que [numéro].
-%% Attention: la clé des références ne doit *pas* contenir le caractère ":"
-%% (bug du package natbib)
+\usepackage[french,english]{babel}
 \usepackage{natbib}
-
-%% Pour interligne simple dans les listes (table des matières, etc.) et
-%% double dans le reste
 \usepackage{setspace}
-
-%% Pour ajouter des méta-données PDF et des hyperliens
 \usepackage{hyperref}
-
-%% Pour inclure des graphiques (via la commande \includegraphics)
 \usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm,multirow,amssymb,wasysym}
+\usepackage{subfig}
+\newcommand{\nospellcheck}[1]{#1}
+\let\labelindent\relax
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{caption}
+%\usepackage{graphicx}
+\usepackage[x11names]{xcolor}
+\usepackage{morefloats}
+\usepackage{adjustbox}
+\usepackage[utf8]{inputenc}  % UTF-8 input encoding
+\usepackage[T1]{fontenc}     % Type1 fonts
+\usepackage{mathptmx}        % Times with math support
+\usepackage{microtype}       % Better handling of typo
+\usepackage{hyperref}        % Better handling of references in PDFs
+\usepackage{comment}         % To comment out blocks of text
+
+\setlist{parsep=0pt,listparindent=\parindent}
+
+\usepackage{float}
+\usepackage{pbox}
+\usepackage{epstopdf}
+
+%% Définition de "todos" pour annoter le texte
+\usepackage{todonotes}
+\newcommand{\todosylvain}[1]{\todo[inline,color=LightBlue2]{\sf\small @Sylvain: #1}}
+\newcommand{\todoraphael}[1]{\todo[inline,color=LavenderBlush2]{\sf\small @Raphaël: #1}}
+\newcommand{\todokun}[1]{\todo[inline,color=Khaki1]{\sf\small @Kun: #1}}
+%\newcommand{\todosimon}[1]{\todo[inline,color=Khaki1]{\sf\small @Simon #1}}
+\newcommand{\todotous}[1]{\todo[inline,color=yellow]{\sf\small #1}}
+
+\newcommand{\imagevide}{\framebox(200,200){IMAGE}}
+
+\lstdefinelanguage{pseudo}
+{
+  morekeywords={Input, Output, Begin, End, if, then, else, endif, while, do, begin, end, continue, break, return, Bitmap},
+  sensitive=false,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+}
+
+\lstset{
+  language=pseudo,
+  numbers=left,
+  frame=single,
+  xleftmargin=2.5em,
+  framexleftmargin=2.5em,
+  basicstyle=\scriptsize\ttfamily,
+  stepnumber=1,                           % the step between two line-numbers. If it is 1 each line will be numbered
+  tabsize=2,                              % tab size in blank spaces
+  extendedchars=true,                     %
+  breaklines=true,                        % sets automatic line breaking
+  captionpos=t,                           % sets the caption-position to top
+  mathescape=true,
+  showspaces=false,
+  showtabs=false,
+  showstringspaces=false
+ }
+  
+\DeclareCaptionFormat{listing}{\centering #1#2#3}
+\captionsetup[lstlisting]{format=listing,singlelinecheck=false, margin=0pt, font={sf},labelsep=space,labelfont=bf}
+
+\renewcommand\lstlistingname{Algorithm}
+
+\DeclareMathVersion{algo}
+\SetSymbolFont{operators}{algo}{OT1}{cmbr}{m}{n}
+\SetSymbolFont{letters}  {algo}{OML}{cmbrm}{m}{it}
+\SetSymbolFont{symbols}  {algo}{OMS}{cmbrs}{m}{n}
+
+\lstnewenvironment{algo}[1][]
+  {\lstset{#1}\mathversion{algo}}{}
+
+\newcommand{\listequationnumber}{\refstepcounter{equation}(\theequation)}
+\newcommand{\listequation}[1]{$\displaystyle #1$\hfill\listequationnumber}
+
+\graphicspath {{imgs/}}
 
 % Pour l'index
 \makeindex
@@ -47,10 +109,10 @@
   une étude empirique}
 
 %% Auteur du document
-\newcommand{\UqacTheseAuteur}{Emmett Brown}
+\newcommand{\UqacTheseAuteur}{Kun Xie}
 
 %% Date (mois année) du document
-\newcommand{\UqacTheseDate}{Novembre 1955}
+\newcommand{\UqacTheseDate}{March 2016}
 
 %% ------------------------
 %% Création des méta-données PDF
@@ -78,24 +140,33 @@
 \singlespacing
 %% \include{avant-propos} %% Facultatif
 \cleardoublepage
-\addcontentsline{toc}{chapter}{\contentsname}
+\pdfbookmark{\contentsname}{\contentsname}
+\label{\contentsname}
 \tableofcontents
-\cleardoublepage
+\newpage
+
+\phantomsection
+\label{\listfigurename}
 \addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
-\cleardoublepage
+\newpage
+
+\phantomsection
+\label{\listtablename}
 \addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
+\newpage
 
 %% ------------------------
 %% Document principal
 %% ------------------------
 \mainmatter
 \doublespacing
-\include{resume}
+% \include{resume}
 \include{introduction}
-\include{chapitre1}
-\include{chapitre2}
+\include{qrcode}
+\include{bitmap}
+
 %% ...
 %% Ajoutez autant de commandes include qu'il y a de chapitres à
 %% inclure dans votre document
@@ -107,11 +178,14 @@
 %% ------------------------
 \backmatter
 %% Style des références bibliographiques
-\bibliographystyle{theseuqam}
+% \bibliographystyle{theseuqam}
 
 %% Liste des fichiers source pour la bibliograhpie.
 %% On peut inclure plus d'un fichier en séparant leurs noms par des
 %% virgules.
+\clearpage
+\phantomsection
+\bibliographystyle{theseuqam}
 \bibliography{bibliographie}
 
 %% Décommenter cette ligne pour afficher l'index
