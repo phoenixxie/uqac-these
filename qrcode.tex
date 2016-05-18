@@ -1,7 +1,8 @@
 %!TEX root = these.tex
 
 \chapter{Real-Time Streaming Communication with Optical Codes}
-\vspace*{\fill}{This chapter represents a modified version of a paper published in 2016 in IEEE Access, v.4, p. 284-298 by K. Xie and S. Gaboury and S. Hallé.\clearpage}
+
+This chapter represents a reformatted version of a paper published in 2016 in IEEE Access, v.4, p. 284-298 by K. Xie, S. Gaboury and S. Hallé.
 
 \section*{Abstract}
 Optical codes have long been used to carry small amounts of static data, such as URLs, IDs or other short binary sequences. In this chapter, we experiment on the use of sequences of optical codes to form a one-way communication channel. In this context, a sender is made of a surface displaying rapidly changing codes, which are picked up by a receiver's camera and converted back into a binary data stream. After presenting experimental results seeking the combination of frame rate, code size and error correction level maximizing effective bandwidth, we describe the implementation of a robust communication protocol designed specifically for lossy, simplex, and low-bandwidth data links. Our findings indicates that such a protocol is sufficient for carrying at least voice-quality audio in realtime.
@@ -11,9 +12,9 @@ Optical codes have long been used to carry small amounts of static data, such as
 %% -----------------------
 \section{Introduction}\label{sec:qr:intro} %% {{{
 
-Wireless communication is a technology that allows two or more peers to communicate without electric cables or conductors \cite{tse2005fundamentals}. While the majority of wireless communication technologies uses radio waves as their transmission medium, a few others use light, especially in situations where radio technology is difficult to apply. Optical communication in itself reaches back to the use of flags, smoke signals and signal lamps to communicate information between two points with the use of a specific code~\cite{burns2004}.
+Wireless communication is a technology that allows two or more peers to communicate without electric cables or conductors \citep{tse2005fundamentals}. While the majority of wireless communication technologies uses radio waves as their transmission medium, a few others use light, especially in situations where radio technology is difficult to apply. Optical communication in itself reaches back to the use of flags, smoke signals and signal lamps to communicate information between two points with the use of a specific code~\citep{burns2004}.
 
-Recently, a simple form of optical communication, called \emph{Quick Response Code} (QR code) \cite{qrcode-about}, emerged as a refinement over the existing technology of one-dimensional barcodes. Owing to their accuracy and their considerable capacity, QR codes have been used in many areas; applications for handling such codes have also been ported to a variety of devices, including desktop computers, smartphones, and even television sets.
+Recently, a simple form of optical communication, called \emph{Quick Response Code} (QR code) \citep{qrcode-about}, emerged as a refinement over the existing technology of one-dimensional barcodes. Owing to their accuracy and their considerable capacity, QR codes have been used in many areas; applications for handling such codes have also been ported to a variety of devices, including desktop computers, smartphones, and even television sets.
 
 However, so far QR codes have been used for the transmission of \emph{static} data. Generally a code is printed on a physical medium, such as a sheet of paper, and is read by an optical device (typically a camera) for decoding at a later time. In this chapter, we explore the idea of extending QR codes and turn them into a dynamic, one-way communication channel. In such a channel, a stream of data is transmitted through a \emph{sequence} of codes; typically, these codes are continuously generated and displayed on one device, and simultaneously captured and decoded by another, hence performing the same task as other kinds of communication technologies.
 
@@ -25,7 +26,7 @@ These first results indicate that QR code streams can indeed be used as a simple
 
 A second experiment reveals the robustness of this transmission scheme: using our specially designed protocol, the communication channel created by a person pointing a smartphone at arm's length towards a flickering QR display produces sufficient bandwidth to transmit voice-quality audio in real time. Section~\ref{sec:qr:experiments} presents the environment and the results of the experiments of this second step. We also show how a piece of data, cut into multiple codes with the use of BufferTannen, can be reconstructed automatically by a user hovering his camera over a sheet of such printed codes in no particular order.
 
-This work was originally motivated by a practical application in the field of runtime verification. In past research, we suggested and informally experimented the use of optical codes as a form of loosely coupled communication between a software system and an external monitor receiving events produced by that system \cite{DBLP_conf/rv/LavoieLVGH14}. In this context, communication through optical means ensured a complete isolation between the system and its monitor.
+This work was originally motivated by a practical application in the field of runtime verification. In past research, we suggested and informally experimented the use of optical codes as a form of loosely coupled communication between a software system and an external monitor receiving events produced by that system \citep{DBLP_conf/rv/LavoieLVGH14}. In this context, communication through optical means ensured a complete isolation between the system and its monitor.
 
 Although the use of sequences of QR codes has been informally suggested in the past, to the best of our knowledge, our study is the first systematical investigation of the potential of QR codes to send streams of data in real time. %Because QR codes are basically images, besides being displayed on the screen, they can be also distributed in other ways, for example, they can be printed on the papers or other printable surfaces. 
 
@@ -42,7 +43,7 @@ This section recalls a few common wireless communication technologies. Despite t
 
 \subsection{Radio Waves}
 
-The first obvious means of wireless communication is through the use of radio waves, and is best exemplified through WiFi \cite{Comer:2008:CNI:1816918}, used for local area wireless networking. Its variants are based on the IEEE 802.11 family of standards, and support both centralized (routing) and decentralized (\textit{ad hoc}) networking. Table \ref{tab:qr:wifi-protocol} shows popular 802.11 standards and part of their specifications.
+The first obvious means of wireless communication is through the use of radio waves, and is best exemplified through WiFi \citep{Comer:2008:CNI:1816918}, used for local area wireless networking. Its variants are based on the IEEE 802.11 family of standards, and support both centralized (routing) and decentralized (\textit{ad hoc}) networking. Table \ref{tab:qr:wifi-protocol} shows popular 802.11 standards and part of their specifications.
 
 \begin{table}[ht]
 \begin{center}
@@ -61,12 +62,12 @@ Protocol &	Frequency & 	Max. physical data rate &	Indoor range\\
 802.11ac &	5 GHz &	866.7 Mbps & 35 m\\
 \hline
 \end{tabular}
-\caption{A summary of WiFi protocols\cite{theng2008ubiquitous,perahia2013next}}
+\caption{A summary of WiFi protocols\citep{theng2008ubiquitous,perahia2013next}}
 \label{tab:qr:wifi-protocol}
 \end{center}
 \end{table}
 
-A second contender in this family is Bluetooth \cite{Comer:2008:CNI:1816918}, which is used for short-range and generally point-to-point communication between devices. Its range varies from about 1 to 100 meters depending on the class of power. Table \ref{tab:qr:bluetooth} shows different versions of Bluetooth and their specific data rates.
+A second contender in this family is Bluetooth \citep{Comer:2008:CNI:1816918}, which is used for short-range and generally point-to-point communication between devices. Its range varies from about 1 to 100 meters depending on the class of power. Table \ref{tab:qr:bluetooth} shows different versions of Bluetooth and their specific data rates.
 
 \begin{table}[ht]
 \begin{center}
@@ -83,12 +84,12 @@ Version 3.0 + HS &	24 Mbps & \\
 Version 4.0 &	24 Mbps & \\
 \hline
 \end{tabular}
-\caption{Bluetooth specifications \cite{gupta2013inside}}
+\caption{Bluetooth specifications \citep{gupta2013inside}}
 \label{tab:qr:bluetooth}
 \end{center}
 \end{table}
 
-Finally, ZigBee \cite{farahani2011zigbee}, based on the IEEE 802.15.4 standard, aims to implement short-range wireless communication with low power and long battery life. Table \ref{tab:qr:zigbee} shows its performance in different frequency bands.
+Finally, ZigBee \citep{farahani2011zigbee}, based on the IEEE 802.15.4 standard, aims to implement short-range wireless communication with low power and long battery life. Table \ref{tab:qr:zigbee} shows its performance in different frequency bands.
 
 \begin{table}[ht]
 \begin{center}
@@ -103,7 +104,7 @@ Frequency Band  &	Data rate	&	Range\\
 2.4--2.4835 GHz  &	250 kbps & \\
 \hline
 \end{tabular}
-\caption{ZigBee specifications \cite{lee2007comparative}}
+\caption{ZigBee specifications \citep{lee2007comparative}}
 \label{tab:qr:zigbee}
 \end{center}
 \end{table}
@@ -112,7 +113,7 @@ All these protocols have on point in common: before allowing any form of communi
 
 \subsection{IrDA}
 
-In a different family, we find technologies using infrared waves instead of radio \cite{sarkar2007ad}. In addition to the different wavelength, these technologies generally relax the requirements on the establishment of a connection, and allow for a more ``on-the-fly'' communication between two devices. Typically, one end of an infrared link waits for incoming data, while periodically, another device ``points'' at the receiver and beams short bursts of data without requiring prior notice.
+In a different family, we find technologies using infrared waves instead of radio \citep{sarkar2007ad}. In addition to the different wavelength, these technologies generally relax the requirements on the establishment of a connection, and allow for a more ``on-the-fly'' communication between two devices. Typically, one end of an infrared link waits for incoming data, while periodically, another device ``points'' at the receiver and beams short bursts of data without requiring prior notice.
 
 Of particular importance is the IrDA standard (Infrared Data Association); its transceivers send infrared pulses with a cone angle and a moderate irradiance while its receivers can be less than one meter or several meters away depending on the power of the transceivers and the position in the cone. The IrDA communication is half-duplex and provides basic CRC. Table \ref{tab:qr:irda-rate} shows several IrDA schemas and their data rates in the specific range.
 
@@ -131,14 +132,14 @@ FIR &	4 Mbps & \\
 GigaIR &	512 Mbps--1 Gbps & \\
 \hline
 \end{tabular}
-\caption{Data rates for IrDA Physical Layer schemas\cite{millar1998irda}}
+\caption{Data rates for IrDA Physical Layer schemas\citep{millar1998irda}}
 \label{tab:qr:irda-rate}
 \end{center}
 \end{table}
 
 \subsection{Visible Light Communication}
 
-As its name implies, Visible Light Communication (VLC) \cite{komine2004fundamental} uses wavelengths in the visible range (from 400 to 700 nm) to communicate data between peers ---this is typically achieved by rapidly switching a light source on and off, enabling a form of Morse-like encoding of data. A receiver (such as a photo-electrical cell) pointed at the light source detects this flickering and converts it back into digital data. With fluorescent lamps as the light source, the data rate can reach 10 kbps, while with LED technology, the data rate can be as high as 500 Mbps.  The range depends mostly on different specifications, but because it cannot penetrate walls and can also be impacted by dense weather or other light sources, its range and reliability are limited~\cite{arnon2015visible}.
+As its name implies, Visible Light Communication (VLC) \citep{komine2004fundamental} uses wavelengths in the visible range (from 400 to 700 nm) to communicate data between peers ---this is typically achieved by rapidly switching a light source on and off, enabling a form of Morse-like encoding of data. A receiver (such as a photo-electrical cell) pointed at the light source detects this flickering and converts it back into digital data. With fluorescent lamps as the light source, the data rate can reach 10 kbps, while with LED technology, the data rate can be as high as 500 Mbps.  The range depends mostly on different specifications, but because it cannot penetrate walls and can also be impacted by dense weather or other light sources, its range and reliability are limited~\citep{arnon2015visible}.
 
 This mode of communication is intrinsically one-way, as one cannot reply back to the light source, acknowledge reception of information, or request for a retransmission in case of lost data. Therefore, this technology is also the one that requires the least coupling between a transmitter and a receiver; by all practical means, the transmitter is unaware of the presence of a receiver, which, on its side, may elect to start listening at any point in time. We shall see later on that this characteristic is also shared with the QR communication channel we attempt to design.
 
@@ -153,7 +154,7 @@ Not mentioned in the previous short survey of wireless communication technologie
 
 \subsection{Overview of QR codes}
 
-A QR code (officially called ``Quick Response Code'') \cite{qrcode-about} is a two-dimensional barcode that stores data, as shown in Figure \ref{fig:qr:helloqr}. Compared with the well-known UPC barcode, which is a linear (i.e.\ one-dimensional) barcode, a QR code can store more information in a smaller printout size.\footnote{\url{http://www.qrcode.com/en/}} The QR code standard stipulates that these codes can have a capacity as high as 7,089 numeric characters or 2,953 8-bit characters, represented in a square array of a maximum of 177$\times$177 ``pixels'', called \emph{modules} \cite{iso18004}. 
+A QR code (officially called ``Quick Response Code'') \citep{qrcode-about} is a two-dimensional barcode that stores data, as shown in Figure \ref{fig:qr:helloqr}. Compared with the well-known UPC barcode, which is a linear (i.e.\ one-dimensional) barcode, a QR code can store more information in a smaller printout size.\footnote{\url{http://www.qrcode.com/en/}} The QR code standard stipulates that these codes can have a capacity as high as 7,089 numeric characters or 2,953 8-bit characters, represented in a square array of a maximum of 177$\times$177 ``pixels'', called \emph{modules} \citep{iso18004}. 
 
 \begin{figure}
 \centering
@@ -186,7 +187,7 @@ The capacity of a QR code mainly depends on its data type, version and error cor
 
 Before generating a QR code from a piece of data, a code generator needs to analyze that input data to decide the most efficient mode and version. In the data encoding, the characters are converted into a bit stream, and in this progress, some \emph{mode indicators} and \emph{terminators} are inserted for the mode changes. The bit stream is then split into 8-bit codewords, and pad characters are required to fill the number of codewords for the chosen version. The generated codeword sequence is divided into blocks according to the specific error correction level and an error correction codeword is generated for each block. Then the codewords from each block are interleaved and some remainder bits are added as necessary.
 
-In the next step, the generator places the codeword modules in a black-and-white matrix with the finder pattern, separators, timing pattern and alignment Patterns; it applies the masking patterns, evaluates and then selects the appropriate pattern. Finally, it generates the \emph{Format} and \emph{Version Information} and completes the QR code \cite{iso18004}.
+In the next step, the generator places the codeword modules in a black-and-white matrix with the finder pattern, separators, timing pattern and alignment Patterns; it applies the masking patterns, evaluates and then selects the appropriate pattern. Finally, it generates the \emph{Format} and \emph{Version Information} and completes the QR code \citep{iso18004}.
 
 The decoding steps are simply the reverse of the encoding procedure. At first, the QR code needs to be located and the black and white modules are recognized as 0s and 1s that form a binary array. From the binary array, the decoder gets the format information and version information. With that information, it can begin to read the characters and the error correction codewords, and then tries to detect and correct the errors with the error correction codewords according to the appropriate error correction level. In the next step, the data codewords are divided according to the \emph{Mode Indicators} and \emph{Character Count Indicators}, and the data characters are finally decoded and output.
 
@@ -197,7 +198,7 @@ The aforementioned process applies for the encoding and decoding of a single cod
 The use of QR code communication presents several advantages in a handful of scenarios. For example, the US Navy has investigated the use of QR codes as a ``digital semaphore''. The proposed technology focuses on the detection of low-resolution codes from very long ranges, and highlights the interest and possible use cases for this technology in a military context:
 
 \begin{quote}
-Arguably the most significant advantage of QR code LOS [line of sight] communications is the fact that they can be conducted without emitting energy in the RF spectrum. In an emissions controlled (EMCON) environment, this will provide a critical ability to communicate between ships without increasing the possibility of position detection. \cite[p.\ 46]{richter-msc}
+Arguably the most significant advantage of QR code LOS [line of sight] communications is the fact that they can be conducted without emitting energy in the RF spectrum. In an emissions controlled (EMCON) environment, this will provide a critical ability to communicate between ships without increasing the possibility of position detection. \citep[p.\ 46]{richter-msc}
 \end{quote}
 
 However, in the cited work, the codes are considered to be \emph{static}, i.e.\ they do not change over time to form a stream of data, and more or less act as a substitute for flags or signs. Nevertheless, the absence of any emission of radio waves in QR code communication proves to be an appealing advantage in some scenarios.
@@ -208,7 +209,7 @@ We have also seen in the previous section how all other technologies, such as  B
 Preliminary experiments show the technique can work on an inexpensive webcam with a low resolution of $640\times480$ (0.3 megapixels).
 \end{comment}
 
-Finally, we have mentioned in the beginning how the use of an optical and strictly one-way communication channel can also be desirable, even in situations where radio or cable communication is available. For example, in the context of runtime verification, the execution of a system is being observed by an external  process called a \emph{monitor}. To prevent the monitor from interfering with the execution of the system, it is often placed on a separate machine, with some communication channel carrying events from the former to the latter. However, in traditional protocols such as TCP, the bidirectional nature of a connection presents too high a risk of attacks on the program to monitor. Moreover, some software setup is required to hook up the monitor to the program: defining IP addresses, pipe names, ports, etc., which represents too much coupling in many scenarios. We have argued in past work \cite{DBLP_conf/rv/LavoieLVGH14} how the use of an optical communication channel can alleviate these problems by providing greater isolation between the system and its monitor.
+Finally, we have mentioned in the beginning how the use of an optical and strictly one-way communication channel can also be desirable, even in situations where radio or cable communication is available. For example, in the context of runtime verification, the execution of a system is being observed by an external  process called a \emph{monitor}. To prevent the monitor from interfering with the execution of the system, it is often placed on a separate machine, with some communication channel carrying events from the former to the latter. However, in traditional protocols such as TCP, the bidirectional nature of a connection presents too high a risk of attacks on the program to monitor. Moreover, some software setup is required to hook up the monitor to the program: defining IP addresses, pipe names, ports, etc., which represents too much coupling in many scenarios. We have argued in past work \citep{DBLP_conf/rv/LavoieLVGH14} how the use of an optical communication channel can alleviate these problems by providing greater isolation between the system and its monitor.
 
 \subsection{Estimating Bandwidth and Error Rate}
 
@@ -264,7 +265,7 @@ The camera was placed on a stable surface, with the optical code zone correctly 
 
 In the development, we chose OpenCV\footnote{\url{http://opencv.org/}} to capture the images from the camera and ZXing\footnote{\url{https://github.com/zxing/zxing}} to generate and decode the QR codes. To reduce the CPU and memory's overhead of capturing and decoding, the captured images were transformed to 16-level grayscale. The data used to generate QR codes were randomly generated \emph{alphanumerics}. All benchmarking code is implemented in Java and is freely available.\footnote{\url{http://github.com/sylvainhalle/GyroGearloose}}
 
-The code decoding depends on the quality and the complexity of the captured image. If the image is broken or blurred, it will be difficult to decode. And the algorithms of image recognition may have the probability of failure\cite{adel2006}. Therefore, our first step is to measure the ability of optical recognition libraries to properly read sequences of codes, irrespective of the actual data contained in these codes. Sequences of codes were generated by producing a character string of the form \verb+dddd#rrrr...+, where \verb+dddd+ is a sequential number starting from zero and incrementing by one on each successive code, and \verb+rrrr...+ is a random string of characters (different on each code) long enough to fill the code up to its maximum size. Each test consisted in filming the sequence of such codes and storing the sequential number of each correctly decoded image into a file. This allows us to determine the fraction of all codes that were correctly read; given the size of each code and the number of codes sent, this makes it possible to compute the bandwidth and decoding error rate.
+The code decoding depends on the quality and the complexity of the captured image. If the image is broken or blurred, it will be difficult to decode. And the algorithms of image recognition may have the probability of failure\citep{adel2006}. Therefore, our first step is to measure the ability of optical recognition libraries to properly read sequences of codes, irrespective of the actual data contained in these codes. Sequences of codes were generated by producing a character string of the form \verb+dddd#rrrr...+, where \verb+dddd+ is a sequential number starting from zero and incrementing by one on each successive code, and \verb+rrrr...+ is a random string of characters (different on each code) long enough to fill the code up to its maximum size. Each test consisted in filming the sequence of such codes and storing the sequential number of each correctly decoded image into a file. This allows us to determine the fraction of all codes that were correctly read; given the size of each code and the number of codes sent, this makes it possible to compute the bandwidth and decoding error rate.
 
 Our experiments quickly tripped over what appears to be a bug in the ZXing image decoding library. When analyzing sequences of images captured by the camera to look for decoding errors, we discovered that a number of times, the decoding failed while the corresponding image seemed to have no apparent problem (no blurring, correct framing, etc.). Putting the offending codes back on screen and trying to properly decode them with the camera yielded no success, even after changing the code's size, the camera's position, lighting conditions, etc. This is all the more puzzling that codes immediately before and after the problematic one were correctly decoded in multiple frames, while being captured in the same conditions. Even sending the code's ``pure'' image directly back into the decoding algorithm, without going through a camera, produces a decoding error.
 
@@ -320,7 +321,7 @@ Input data bits & Error correction level & Symbol version & Symbol size\\
 \multirow{2}{*}{5800} & L & 19 & 93$\times$93\\
 & H & 30 & 137$\times$137\\
 \hline\end{tabular}
-\caption[Sample sizes]{Sample QR code sizes, according to their data size and error correction level \cite{iso18004}}
+\caption[Sample sizes]{Sample QR code sizes, according to their data size and error correction level \citep{iso18004}}
 \label{tab:qr:sample-sizes}
 \end{center}
 \end{table}
@@ -439,7 +440,7 @@ BufferTannen also defines a protocol allowing the transmission of messages.  Alt
 \item A receiver can start listening on the channel at any time, and be able to correctly receive messages from that point on. As such, the communication does not have a formal ``start'' that could be used, for example, to advertise parameters used for the exchange.
 \end{itemize}
 
-Therefore, the communication channel envisioned as the transmission medium for BufferTannen's messages can be likened in many ways to a slow broadcast signal, such as Hellschreiber \cite{hells}, slow-scan television \cite{slowtv}, Teletext \cite{teletext} or RBDS~\cite{rbds}.
+Therefore, the communication channel envisioned as the transmission medium for BufferTannen's messages can be likened in many ways to a slow broadcast signal, such as Hellschreiber \citep{hells}, slow-scan television \citep{slowtv}, Teletext \citep{teletext} or RBDS~\citep{rbds}.
 
 BufferTannen's protocol aims at transmitting messages as reliably as possible under these conditions, while preserving the integrity of data and the ordering of messages. The low-bandwidth nature of the channel explains the emphasis on serializing messages in a compact binary form. Since the receiver cannot ask for any form of re-transmission, the protocol must provide for automatic re-transmissions of each message to maximize their chances of being picked up, while at the same time not confusing a re-transmission with a new message with identical content. Moreover, as the receiver can start listening at any moment, and that the schema of messages must be known in order to decode them, the schemas used in the communication must also be transmitted at periodic intervals.
 
@@ -779,7 +780,7 @@ Nevertheless, this experiment demonstrates the viability of the concept of hover
 %% -----------------------
 \section{Conclusion}\label{sec:qr:conclusion} %% {{{
 
-In this chapter, we presented a solution for a one-way communication channel based on QR codes, and performed experiments to measure its performance. We first experimentally tested the characteristics of a QR data stream under various conditions, and extracted the parameters maximizing the effective bandwidth of the channel. However, since that channel is inherently error-prone and low-bandwidth, we then introduced BufferTannen, a protocol designed especially for this kind of channel. BufferTannen takes care of splitting, marshaling, and to some extend compressing the data to transmit in order to maximize the efficiency of the QR code stream. The feasibility of this approach was then empirically observed through a new set of experiments.
+In this chapter, we presented a solution for an one-way communication channel based on QR codes, and performed experiments to measure its performance. We first experimentally tested the characteristics of a QR data stream under various conditions, and extracted the parameters maximizing the effective bandwidth of the channel. However, since that channel is inherently error-prone and low-bandwidth, we then introduced BufferTannen, a protocol designed especially for this kind of channel. BufferTannen takes care of splitting, marshaling, and to some extend compressing the data to transmit in order to maximize the efficiency of the QR code stream. The feasibility of this approach was then empirically observed through a new set of experiments.
 
 Within the limits of the protocol and of the communication channel, the presented results can be put to good use in a variety of situations. In limited environments where the use of radio signal or cables is forbidden or difficult, our approach can provide an easy way to communicate between peers, either as an emergency backup or as a primary means. Furthermore, the evolution of the quality of both display and image capture devices makes it possible to foresee increased transmission rates in the future. %as the performance of common devices keeps increasing, the symbols containing more data, or even some more complicated symbol formats can be brought into concern.
 Finally, the aforementioned techniques could be turned into a bidirectional communication link in the case of endpoints equipped with both a camera and a display. In such a case, acknowledgments of correctly decoded images could be exchanged, which in turn would allow resending data on demand and increase the effective bandwidth.

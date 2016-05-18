@@ -14,17 +14,16 @@
 %% ------------------------
 
 \usepackage[utf8]{inputenc}
-\usepackage[french,english]{babel}
+\usepackage[english]{babel}
 \usepackage{natbib}
 \usepackage{setspace}
 \usepackage{hyperref}
 \usepackage{graphicx}
-\usepackage{amsmath,amsfonts,amsthm,multirow,amssymb,wasysym}
+\usepackage{amsmath,amsfonts,amsthm,multirow,multicol,amssymb,wasysym}
 \usepackage{subfig}
 \newcommand{\nospellcheck}[1]{#1}
 \let\labelindent\relax
 \usepackage{enumitem}
-\usepackage{listings}
 \usepackage{caption}
 %\usepackage{graphicx}
 \usepackage[x11names]{xcolor}
@@ -36,12 +35,47 @@
 \usepackage{microtype}       % Better handling of typo
 \usepackage{hyperref}        % Better handling of references in PDFs
 \usepackage{comment}         % To comment out blocks of text
+\usepackage{algorithm,algorithmicx,algpseudocode}
+\usepackage[page,titletoc]{appendix}
 
 \setlist{parsep=0pt,listparindent=\parindent}
 
 \usepackage{float}
 \usepackage{pbox}
 \usepackage{epstopdf}
+
+\setlength{\headheight}{15pt} 
+
+\def\og{{\fontencoding{T1}\selectfont\char19}}
+\def\fg{{\fontencoding{T1}\selectfont\char20}}
+
+\renewcommand{\topfraction}{0.9}    % max fraction of floats at top
+\renewcommand{\bottomfraction}{0.8} % max fraction of floats at bottom
+
+%% Parameters for TEXT pages (not float pages)
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}                 % 2 may work better
+\setcounter{dbltopnumber}{2}                % for 2-column pages
+\renewcommand{\dbltopfraction}{0.9}         % fit big float above 2-col. text
+\renewcommand{\textfraction}{0.07}          % allow minimal text w. figs
+
+% Parameters for FLOAT pages (not text pages)
+\renewcommand{\floatpagefraction}{0.7}      % require fuller float pages
+% N.B.: floatpagefraction MUST be less than topfraction !!
+\renewcommand{\dblfloatpagefraction}{0.7}   %require fuller float pages
+
+\newenvironment{abstract}%
+    {\cleardoublepage\thispagestyle{empty}\null\vfill\begin{center}%
+    \bfseries\abstractname\end{center}}%
+    {\vfill\null}
+
+\newenvironment{acknowledgements}%
+    {\cleardoublepage\thispagestyle{empty}\null\vfill\begin{center}%
+    \bfseries Acknowledgements\end{center}}%
+    {\vfill\null}
+
+\providecommand{\keywords}[1]{\textbf{\textit{Keywords: }} #1}
 
 %% Définition de "todos" pour annoter le texte
 \usepackage{todonotes}
@@ -53,47 +87,20 @@
 
 \newcommand{\imagevide}{\framebox(200,200){IMAGE}}
 
-\lstdefinelanguage{pseudo}
-{
-  morekeywords={Input, Output, Begin, End, if, then, else, endif, while, do, begin, end, continue, break, return, Bitmap},
-  sensitive=false,
-  morecomment=[l]{//},
-  morecomment=[s]{/*}{*/},
-}
-
-\lstset{
-  language=pseudo,
-  numbers=left,
-  frame=single,
-  xleftmargin=2.5em,
-  framexleftmargin=2.5em,
-  basicstyle=\scriptsize\ttfamily,
-  stepnumber=1,                           % the step between two line-numbers. If it is 1 each line will be numbered
-  tabsize=2,                              % tab size in blank spaces
-  extendedchars=true,                     %
-  breaklines=true,                        % sets automatic line breaking
-  captionpos=t,                           % sets the caption-position to top
-  mathescape=true,
-  showspaces=false,
-  showtabs=false,
-  showstringspaces=false
- }
-  
-\DeclareCaptionFormat{listing}{\centering #1#2#3}
-\captionsetup[lstlisting]{format=listing,singlelinecheck=false, margin=0pt, font={sf},labelsep=space,labelfont=bf}
-
-\renewcommand\lstlistingname{Algorithm}
-
-\DeclareMathVersion{algo}
-\SetSymbolFont{operators}{algo}{OT1}{cmbr}{m}{n}
-\SetSymbolFont{letters}  {algo}{OML}{cmbrm}{m}{it}
-\SetSymbolFont{symbols}  {algo}{OMS}{cmbrs}{m}{n}
-
-\lstnewenvironment{algo}[1][]
-  {\lstset{#1}\mathversion{algo}}{}
-
 \newcommand{\listequationnumber}{\refstepcounter{equation}(\theequation)}
 \newcommand{\listequation}[1]{$\displaystyle #1$\hfill\listequationnumber}
+
+\newcommand{\G}{\ensuremath{\mathop{\mbox{\textbf{G}}}\,}}
+\newcommand{\F}{\ensuremath{\mathop{\mbox{\textbf{F}}}\,}}
+\newcommand{\X}{\ensuremath{\mathop{\mbox{\textbf{X}}}\,}}
+\newcommand{\U}{\ensuremath{\mathrel{\mbox{\,\textbf{U}}}\,}}
+\newcommand{\R}{\ensuremath{\mathrel{\mbox{\,\textbf{R}}}\,}}
+\newcommand{\W}{\ensuremath{\mathrel{\mbox{\,\textbf{W}}}\,}}
+
+\newcommand{\squeeze}{\vskip -8pt}
+\newcommand{\squeezemore}{\vskip -20pt}
+
+\newcommand{\etal}{et al.}
 
 \graphicspath {{imgs/}}
 
@@ -105,8 +112,7 @@
 %% ------------------------
 
 %% Titre du document
-\newcommand{\UqacTheseTitre}{Applications du convecteur temporel:
-  une étude empirique}
+\newcommand{\UqacTheseTitre}{Applications du convecteur temporel: une étude empirique}
 
 %% Auteur du document
 \newcommand{\UqacTheseAuteur}{Kun Xie}
@@ -137,6 +143,12 @@
 %% Pages préliminaires
 %% ------------------------
 \frontmatter
+
+\doublespacing
+
+\include{abstract}
+\input{acknowledgements}
+
 \singlespacing
 %% \include{avant-propos} %% Facultatif
 \cleardoublepage
@@ -164,6 +176,7 @@
 \doublespacing
 % \include{resume}
 \include{introduction}
+\include{review}
 \include{qrcode}
 \include{bitmap}
 
@@ -172,6 +185,16 @@
 %% inclure dans votre document
 %% ...
 \include{conclusion}
+
+% \begin{appendices}
+% \include{appendices}
+% \end{appendices}
+
+\begin{appendices}
+\chapter{Experiment results of calculating LTL formul\ae{}s with bitmap compression}
+\label{appendixa}
+\input{appendices}
+\end{appendices}
 
 %% ------------------------
 %% Pages liminaires
