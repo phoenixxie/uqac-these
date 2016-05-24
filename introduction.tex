@@ -6,13 +6,13 @@ In recent decades, a huge number of hardware and software systems have been intr
 
 \section{Context}
 
-Obviously, the dependability of a system is critical, and a dependable system should have the ability to function strictly according to its specification in the stated period \citep{avivzienis2004basic}. The ability is Reliability and to measure it, some techniques are invented, one of which is runtime verification.
+Obviously, the dependability of a system is critical, and a dependable system should have the ability to function strictly according to its specification in the stated period \citep{avivzienis2004basic}. Software verification and validation is the process of measuring this ability and evaluating the software quality \citep{ieeestd2012}.
 
-Runtime verification \citep{leucker2009brief} is an approach of checking whether the behavior of a computing system satisfies or violates certain property. Normally runtime verification does not influence the execution of the running system, even if it detects a violation of the properties. For this purpose, a monitor is employed to analyze the collected finite trace and then produce a verdict which is generally a truth value.
+Runtime verification \citep{leucker2009brief} is an approach of software verification and validation which is applicable for checking whether the behavior of a computing system satisfies or violates certain property. Normally runtime verification does not influence the execution of the running system, even if it detects a violation of the properties. For this purpose, a monitor is employed to analyze the collected finite trace and then produce a verdict which is generally a truth value. Therefore a runtime verification system should have at least two crucial components: data collection and formul\ae{} evaluation. 
 
-In runtime verification, some variants of linear temporal logic (LTL) \citep{pnueli97} are used as high-level specification to synthesize monitors automatically. PathExplorer \citep{havelund2001java}, Eagle \citep{barringer2004rule} and MOP \citep{chen2007mop} are runtime verification frameworks for monitoring based on various logics, most of which are derived from LTL.
+% Some variants of linear temporal logic (LTL) \citep{pnueli97} are used as high-level specification to synthesize monitors automatically. PathExplorer \citep{havelund2001java}, Eagle \citep{barringer2004rule} and MOP \citep{chen2007mop} are runtime verification frameworks for monitoring based on various logics, most of which are derived from LTL.
 
-Nowadays in order to meet the demand of analyzing rapidly growing amount of the trace data, various solutions have been proposed. Some researchers managed to optimize the algorithms, such as \cite{havelund2001monitoring}, and some others like \cite{barre2012mapreduce} ported existing methodologies to distributed computing frameworks.
+Nowadays in order to meet the demand of analyzing rapidly growing amount of the trace data, a variety of solutions have been proposed. Some researchers like \cite{barre2012mapreduce} ported existing methodologies to distributed computing frameworks. However, no matter how many processors and memory a cloud system has, there is always a limit of their usages. Thus some other researchers managed to optimize the algorithms, such as \cite{havelund2001monitoring}.
 
 Bitmap is an efficient method to reduce the space overhead of data thanks to the concise structure, and the bit-level parallel and cache friendly feature is able to boost the performance of operations \citep{culpepper2010efficient}. It is widely applied in the applications which have serious demand of space and efficiency, e.g. database and search engines \citep{lemire2014}. If a bitmap is sparse, i.e. the fraction of used bits is low, the bitmap may use less storage space with the aid of the bitmap compression algorithms \citep{antoshenkov1995byte}.
 
@@ -22,9 +22,7 @@ Various barcodes have been applied in diverse areas from traditional e-commerce 
 
 \section{Thesis objectives}
 
-The objectives of this research center around the development of methods or techniques which is able to give assistance to the tasks and the operations of runtime verification.
-
-As the definition of runtime verification indicates, a runtime verification system has at least three crucial components: data collection, monitor synthesizing and property verification. 
+The objectives of this research center around the development of methods or techniques which is able to give assistance to the two mentioned aspects of runtime verification: data collection and formul\ae{} evaluation.
 
 The first principle objective and contribution was to present a new method of data collection and discuss about its feasibility and performance. QR Code is considered fast and large-capacity, and more important is that its utilization needs only a surface (e.g. screen) as the transmitter and a camera as the receiver, both of which have become mainstream configuration of nearly every laptop and mobile phone in recent years. If a QR code containing certain amount of data is considered as a network data packet, a sequence of QR codes is like a network data stream. Our main concern here was the bandwidth of the one-way communication channel consisting of QR Codes and the critical factors which affect the performance, and also the method of applying this communication channel to our runtime verification practice.
 
@@ -52,6 +50,6 @@ Chapter two briefs the relevant knowledge of runtime verification, linear tempor
 
 Chapter three is one of the contributions from this research. It presents the solution of one-way communication channel consisting of flickering QR Codes. It is actually a reformatted version of the publication ``Real-Time Streaming Communication with Optical Codes'' \citep{kxie7370891}.
 
-Chapter four is another contribution, the solution of calculating LTL formul\ae{}s with the assistance of bitmaps. The chapter details the definition of mapping, the algorithms and the experiment. It is based on the paper ``Offline Evaluation of LTL Formulæ with Bitmap Manipulations''.
+Chapter four is another contribution, the solution of calculating LTL formul\ae{}s with the assistance of bitmaps. The chapter details the definition of mapping, the algorithms and the experiment. It is based on the paper ``Offline Evaluation of LTL Formul\ae{} with Bitmap Manipulations''.
 
 Finally, chapter five concludes this research with the summary of our contributions and looks forward to our future work.

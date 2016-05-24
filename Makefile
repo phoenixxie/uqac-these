@@ -15,7 +15,6 @@ help:
 	@echo '   make once                        compile la thèse une fois          '
 	@echo '   make all                         compile au complet (3x avec BibTeX)'
 	@echo '   make clean                       efface les fichiers temporaires    '
-	@echo '   make flush                       clean + efface le pdf de la thèse  '
 	@echo '   make install                     installe la classe dans l\'arbre   '
 	@echo '                                      texmf local                      '
 	@echo '                                                                       '
@@ -35,9 +34,6 @@ install:
 	cp uqac-these.cls theseuqam.bst logo-uqac.pdf $(TEXHOME)/$(INSTALLDIR)/
 
 clean:
-	rm -f *.synctex.gz *.fdb_latexmk *.fls *.aux *.log *.blg *.bbl *.dvi *.spl *.out *.toc *.lof *.lot *~
+	rm -f $(FILENAME).pdf *.synctex.gz *.fdb_latexmk *.fls *.aux *.log *.blg *.bbl *.dvi *.spl *.out *.toc *.lof *.lot *~
 
-flush: clean
-	rm $(FILENAME).pdf
-
-.PHONY : all clean once install flush help
+.PHONY : all clean once install help

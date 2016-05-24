@@ -6,24 +6,65 @@ In this chapter, we firstly review the common information of runtime verificatio
 
 \section{Runtime verification}
 
-Software verification and validation, as an important aspect of project management and software engineering, is the process of employing various necessary techniques to detect the violations or satisfactions and to evaluate the software quality and the performance of a system \citep{ieeestd2012}. There are traditional techniques such as theorem proving \citep{heisel1990tactical}, model checking \citep{clarke1999model}, and software testing \citep{myers2011art}.
+\subsection{Conception}
 
-In 2001, the Runtime verification workshop \footnote{http://www.runtime-verification.org/} was founded, as the terminology ``runtime verification'' was officially introduced \citep{wiki:rv}. It is a relatively new technique which is lightweight and aims to complement other verification techniques like model checking and testing \citep{leucker2009brief}. 
+Software verification and validation, as an important aspect of project management and software engineering, is the process of employing various necessary techniques to detect the violations or satisfactions and to evaluate the software quality and the performance of a system \citep{ieeestd2012}.
 
-Runtime verification (RV) is a formal analysis approach which gathers the running information from a monitored system and analyzes it to check whether some property of the specification is violated or satisfied. Normally when a violation is observed, runtime verification itself does not try to fix the program which it is monitoring, but its result can be considered a guide for other component in the same system to deal with the problem.
+There are normally two kinds of verification techniques: static and dynamic analysis. Some well-knowns traditional techniques of static analysis are model checking \citep{clarke1999model} and theorem proving \citep{heisel1990tactical}. Static analysis is usually applied to verify the behaviors of a system before its execution, but such techniques have natural shortcomings. For example, model checking cannot work on a system of which the size or the number of states might grow beyond the capacity of computational power owing to the ``state-explosion problem''.
 
-\cite{leucker2009brief} defines a \emph{run} of a system as a sequence of infinite traces of the system, and an \emph{execution} of a system as a finite trace and also a \emph{finite prefix} of a \emph{run}. The work of runtime verification mainly focuses on the analysis of \emph{executions} which are performed by \emph{monitors}. During verification, a \emph{monitor} enumerates the finite traces of an \emph{execution}, checks whether they satisfy the correctness properties and produces a \emph{verdict} as the result. A \emph{verdict} is normally truth value which can be expressed as true/value, yes/no or 1/0, depending on the context.
+Dynamic analysis is to monitor running systems. Although sometimes its result might be false negatives because of its incompleteness, this incompleteness enables the techniques of dynamic analysis to break the limitation of static methods and thus become their complementary verification
+methods. \citep{falcone2013tutorial}
 
-Monitors are automatically synthesized from formal specifications, and depending on how the monitors run, there are four monitoring modes \citep{chen2007mop}:
+Runtime verification (RV) is a kind of verification technique based on dynamic analysis. In 2001, the Runtime verification workshop \footnote{http://www.runtime-verification.org/} was founded, as the terminology ``runtime verification'' was officially introduced \citep{wiki:rv}. It is a relatively new technique which is lightweight and aims to complement other traditional verification techniques like model checking and testing.
+
+\cite{leucker2009brief} defines runtime verification as follows:
+\begin{displayquote}
+Runtime verification is the discipline of computer science that deals with the study, development, and application of those verification techniques that allow checking whether a run of a system under scrutiny satisfies or violates a given correctness property.
+\end{displayquote}
+
+Normally when a violation is observed, runtime verification does not fix the detected program itself, but its result is an important guide and basis for other component in the same system to deal with the problem.
+
+\cite{leucker2009brief} also defines a \emph{run} of a system as a sequence of infinite traces of the system, and an \emph{execution} of a system as a finite trace and also a \emph{finite prefix} of a \emph{run}. The work of runtime verification mainly focuses on the analysis of \emph{executions} which are performed by \emph{monitors}.
+
+A \emph{monitor} is a decision procedure generated (or ``synthesized'') from one of the formal properties which is to be verified against the execution of the given system. During verification, a \emph{monitor} enumerates the finite traces of an \emph{execution}, checks whether they satisfy the correctness properties and produces a \emph{verdict} as the result. A \emph{verdict}, which is normally a truth value, indicates the satisfaction of the property against the gathered events.
+
+A verdict in most simple cases normally can be expressed as true/value, yes/no or 1/0, depending on the context. But actually many runtime verification systems have to introduce other values to provide a more accurate result. For example, thanks to the incompleteness of runtime verification system, a verdict cannot be easily issued when the monitor needs more successive events, so a \emph{inconclusive} (written as ``?'') value is introduced to indicate the current status of the monitored system. \citep{falcone2013tutorial}
+
+\subsection{Procedure}
+
+\begin{figure}[h]
+\begin{center}
+\centering
+\includegraphics[width=80mm]{rvstruct.png}
+\caption{Runtime verification process (from \cite{falcone2013tutorial})}
+\label{img:rvstruct}
+\end{center}
+\end{figure}
+
+Figure \ref{img:rvstruct} describes the process of a typical runtime verification system which contains the following four steps \citep{falcone2013tutorial}:
+\begin{enumerate}
+\item \emph{Monitor synthesis}: A monitor is synthesized from a property.
+\item \emph{System instrumentation}: Extra instruments are integrated with the system under scrutiny in order to generate the events for the \emph{monitor}.
+\item \emph{Execution}: The system is executed and starts to generate events and send them to the monitor.
+\item \emph{Analysis and response}: The monitor analyzes the collected events, emits a \emph{verdict} and sends additional information, i.e. \emph{feedback} to the system if necessary.
+\end{enumerate}
+
+Monitors can be classified into several modes from different aspects \citep{chen2007mop}:
 \begin{itemize}
-\item \emph{offline}: Monitor analyze logged event traces possibly after the system stops.
-\item \emph{online}: Monitors run at the same time as the program. In online mode, where the monitors run leads to two submodes:
-\item \emph{inline}: Monitors are integrated into the system.
-\item \emph{outline}: Monitors run all alone while receiving the event traces from the system by certain methods, e.g. via file system or wireless signal.
+\item \emph{online/offline} depends on when the monitors and the system work. \emph{Online} if they work at the same time, and \emph{offline} if the monitors start to work after the termination of the execution of the system.
+\item \emph{inline/outline} depends on where the monitors are executed. \emph{inline} if the monitors are embedded into the system and \emph{outline} if the monitors run all alone while receiving the event traces from the system by certain methods, e.g. via file system or wireless signal.
+\item \emph{violation/validation} is determined by the specification of the verdict.
 \end{itemize}
-From the definitions of the modes, we can see that a monitor working in offline mode is also working in outline mode and a monitor in inline mode is as well in online mode.
 
-Comparing with model checking \citep{clarke1999model} which is an automatic verification technique for verifying finite state systems, the methods of generating monitors in runtime verification and generating automatas in model checking have similarities. However, whereas model checking deals mainly with infinite traces, RV deals only with finite traces, i.e. the executions. For this reason, the monitors working in online monitoring mode have to be able to accept incremental traces. Another important difference between model checking and runtime verification is that, unlike model checking which checks if all executions of a system satisfy a correctness property, RV is interested only with whether existing an execution which belongs to a set of valid executions, which is a similarity shared by software testing \citep{broy2005model}. In another hand, ``exhaustive testing'' is normally not an option of runtime verification, and test oracles of testing are usually defined by hand while monitors of RV are generated from high-level specification.
+From the definitions of the modes, we can see that a monitor working in offline mode is also working in outline mode and the inline mode implies the online mode.
+
+\subsection{Comparison with other techniques}
+
+Comparing with model checking \citep{clarke1999model} which aims to verify finite state systems, the methods of generating monitors in runtime verification and generating automatas in model checking have similarities. However, whereas model checking deals mainly with infinite traces, runtime verification deals only with finite traces, i.e. the executions. For this reason, the monitors of runtime verification working in online monitoring mode have to be able to accept incremental traces.
+
+Another important difference between model checking and runtime verification is that, unlike model checking which checks if all executions of a system satisfy a correctness property, runtime verification is interested only with whether existing an execution which belongs to a set of valid executions. Moreover, runtime verification only requires to analyze the observed events of a given system without having to watch its internal running information, but in model checking, the proper model of the system must be acknowledged in order to prepare every possible execution before running the system. \citep{leucker2009brief}
+
+Software testing \citep{broy2005model} is another verification technique. It is a process of running a program with a finite set of input-output sequences which is also namely test suite. Comparing with runtime verification, test suites are defined directly, unlike properties of runtime verification which are generated from formalism specification. Besides, ``exhaustive testing'' which is a common method in software testing, is normally not an option of runtime verification.
 
 \section{Linear temporal logics}
 
@@ -153,7 +194,7 @@ JavaMaC \citep{kim2004java} is a ``run-time assurance system'' for Java programs
 
 Temporal Rover \citep{drusinsky2000temporal} is a commercial runtime verification tool based on LTL and MTL (Metric Temporal Logic). The specification code of Temporal Rover is inserted into the source code of Java, C, C++ or HDL and then converted into a compilable source file of corresponding language. A Temporal-Rover runtime verification system normally has two parts: host and target. The host is responsible for the verification while the target performs the computation of propositional formul\ae{} and sends back the results to the host via serial port, RPC or other customizable protocol.
 
-Each of the frameworks discussed above hardwires a different specification formalism, which suggests that a general specification formalism serving all purposes does not exist. To be more expressive and generic, \cite{chen2007mop} introduced customizable and extensible ``logic-plugins'' in their runtime framework MOP and designed its architecture shown in Figure \ref{img:mop} with two layers: one is called ``language clients'' which support different programming languages, while another is ``logic repository'' which includes and manages various ``logic-plugins'' to support different specification formalisms, such as LTL, CFG (context-free grammar), FSM (finite state machine) and ERE (Extended regular expression).
+Each of the frameworks discussed above hardwires a different specification formalism, which suggests that a general specification formalism serving all purposes does not exist. To be more expressive and generic, \cite{chen2007mop} introduced customizable and extensible ``logic-plugins'' in their runtime framework MOP and designed its architecture shown in Figure \ref{img:mop} with two layers: one is called ``language clients'' which support different programming languages, while another is ``logic repository'' which includes and manages various ``logic-plugins'' to support different specification formalisms, such as : Linear Temporal Logic (ltl), Finite State Machines (fsm), Extended Regular Expressions (ere), Context Free Grammars (cfg) and String Rewriting Systems (srs).
 
 \begin{figure}[h]
 \begin{center}
@@ -163,3 +204,5 @@ Each of the frameworks discussed above hardwires a different specification forma
 \label{img:mop}
 \end{center}
 \end{figure}
+
+Besides the frameworks presented above, there are also lots of other frameworks invented for their corresponding requirements or specific temporal logics. Comparing these frameworks, we can find that they have their specialties as well as they share some common characters. For example, nearly all frameworks support online monitoring mode, Java programming language and network communication perhaps because these features are the most popular requirement in industry. Temporal Rover is a commercial RV framework, so it has to support more programming languages and supply more data collection options in order to expand its marketing. MOP was designed to be extremely general, resulting that most components can be changed or separately optimized.

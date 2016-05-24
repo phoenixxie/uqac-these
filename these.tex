@@ -7,7 +7,7 @@
 %%        "thèse" (resp. "mémoire", "essai", etc.)
 %%   - Toutes les options de la classe "book"
 %% -----------------------------------------------------------------------
-\documentclass[times,twoside,these]{uqac-these}
+\documentclass[times,twoside,memoire]{uqac-these}
 
 %% ------------------------
 %% Packages usuels
@@ -43,6 +43,7 @@
 \usepackage{float}
 \usepackage{pbox}
 \usepackage{epstopdf}
+\usepackage[autostyle]{csquotes}
 
 \setlength{\headheight}{15pt} 
 
@@ -104,6 +105,15 @@
 
 \graphicspath {{imgs/}}
 
+\theoremstyle{definition}
+\newtheorem{theo}{Theorem}
+\newenvironment{Qtheorem}[1][]
+  {\quote\begin{theo}[#1]}
+  {\end{theo}\endquote}
+\newenvironment{Btheorem}[1][]
+  {\begin{theo}[#1]\begin{leftbar}}
+  {\end{leftbar}\end{theo}}
+
 % Pour l'index
 \makeindex
 
@@ -112,13 +122,13 @@
 %% ------------------------
 
 %% Titre du document
-\newcommand{\UqacTheseTitre}{Applications du convecteur temporel: une étude empirique}
+\newcommand{\UqacTheseTitre}{Improvements to data collection and formul\ae evaluation of runtime verification}
 
 %% Auteur du document
 \newcommand{\UqacTheseAuteur}{Kun Xie}
 
 %% Date (mois année) du document
-\newcommand{\UqacTheseDate}{March 2016}
+\newcommand{\UqacTheseDate}{May 2016}
 
 %% ------------------------
 %% Création des méta-données PDF
