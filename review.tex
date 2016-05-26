@@ -134,9 +134,61 @@ Formul\ae{}s \ref{eq:until}, \ref{eq:wuntil} and \ref{eq:release} are binary tem
 
 It is worth noting that in LTL, the two-valued logics might yield a premature result which is either true or false. As is mentioned above, LTL is defined to work with infinite traces whereas monitoring of runtime verification is only able to treat finite traces, which might lead to a conflict, especially in some running system. For instance, $\F \psi$ states that $\psi$ should hold in a future state. In a running system, as long as $\psi$ does not hold in the observed states, the results of the formul\ae{} are always $false$, but if $\psi$ holds in the next observation, the former results will become corrupted and obsolete. Therefore, \cite{bauer2006monitoring} proposed the three-valued logic LTL$_3$ which introduces an new value \emph{inconclusive} for the cases where the property cannot be evaluated immediately.
 
+\subsection{Various LTLs}
+
+\subsubsection{Metric Temporal Logic}
+
+Metric Temporal Logic (MTL) \citep{chang1994compositional} was invented to reason about real-time properties. To precise time accurately, MTL cuts the time into numbered pieces which is also called timed transition modules, and employs boundary operators to constrain the temporal logic operators. Its formul\ae{} is defined as follows:
+\begin{align*}
+\phi ::= & \bot | p | (\phi \rightarrow \phi) | (\fullmoon_{\sim{}c}\phi) | (\circleddash_{\sim{}c}\phi) | (\phi \mathrel{U}_{\sim{}c} \phi) | (\phi \mathrel{S}_{\sim{}c} \phi) \\
+& \mbox{where } \sim \in \{<, =, >, \equiv_d\} \mbox{ and } c \geq 0, d \geq 2
+\end{align*}
+
+$\fullmoon_{\sim{}c}\phi$ means ``Next'', $\circleddash_{\sim{}c}\phi$ means ``Previous'', $\phi \mathrel{U}_{\sim{}c} \phi$ means ``Until'' and $\phi \mathrel{S}_{\sim{}c} \phi$ means ``Since'' \citep{chang1994compositional}. Given that $T_i$ indicates the time of the $i$th state of the path $\pi^i$, whether a formul\ae{} holds at the position $j$ of the path $\pi$ is defined as follows (we ignore the propositional operators here):
+\begin{eqnarray*}
+\pi^i \vDash \fullmoon_{\sim{}c}\psi & \iff & \pi^{i+1} \vDash \psi \mbox{ and } T_{i+1} - T_i \sim c \\
+\pi^i \vDash \circleddash_{\sim{}c}\psi & \iff & i \geq 1 \mbox{ and } \pi^{i-1} \vDash \psi \mbox{ and } T_i - T_{i-1} \sim c \\
+\pi^i \vDash \psi \mathrel{U}_{\sim{}c} \varphi & \iff & \exists j \mbox{ where } i \leq j, \pi^j \vDash \varphi \mbox{ and } T_k - T_j \sim c, and \forall k \mbox{ where } i \leq k < j, \pi^k \vDash \psi \\
+\pi^i \vDash \psi \mathrel{S}_{\sim{}c} \varphi & \iff & \exists j \mbox{ where } 0 \leq j \leq i, \pi^j \vDash \varphi \mbox{ and } T_j - T_k \sim c, and \forall k \mbox{ where } j < k \leq j, \pi^k \vDash \psi \\
+\end{eqnarray*}
+
+\subsubsection{Past time LTL}
+
+Whereas LTL mentioned in the last part is defined to check the future states, Past time LTL (ptLTL) aims to verify the states in the past. A ptLTL formul\ae{} is defined as follows \citep{havelund2004efficient}:
+\begin{align*}
+\phi ::= & \top | \bot | p | (\neg\phi) | (\phi \wedge \phi) | (\phi \vee \phi) | (\phi \rightarrow \phi) \\
+& | (\odot \phi) | (\diamond \phi) | (\boxdot \phi) | (\phi \mathrel{S_s} \phi) | (\phi \mathrel{S_w} \phi) \\
+& | (\uparrow \phi) | (\downarrow \phi) | [\phi, \phi)_s | [\phi, \phi)_w
+\end{align*}
+
+As can be seen in the definition of the formul\ae{}, ptLTL keeps several basic operators as LTL and introduces five standard part time operators and four monitoring operators.
+
+The five standard part time operators are $\odot $ which means ``previous'', $\diamond$ ``eventually in the past'', $\boxdot$ ``always in the past'', $\mathrel{S_s}$ ``strong since'' and $\mathrel{S_w}$ ``weak since''.
+
+The monitoring operators $\uparrow \downarrow [,)_s [,)_w$ mean respectively ``start'', ``end'', ``strong  interval'' and ``weak  interval''.
+
+The temporal operators' semantics are described as follows, in the same form of the last section:
+\begin{eqnarray*}
+\pi^i \vDash \odot \psi & \iff & \mbox{ if } i > 0, \pi^{i - 1} \vDash \psi, or \mbox{ if } i = 0, \pi^0 \vDash \psi \\
+\pi^i \vDash \diamond \psi & \iff & i > 0 \mbox{ and } \exists j \mbox{ where } 0 \leq j \leq i, \pi^j \vDash \psi \\
+\pi^i \vDash \boxdot \psi & \iff & i > 0 \mbox{ and } \forall j \mbox{ where } 0 \leq j \leq i, \pi^j \vDash \psi \\
+\pi^i \vDash \psi \mathrel{S_s} \varphi & \iff & \exists 0 \leq j \leq i, \pi^j \vDash \varphi \mbox{ and } \forall k, j < k \leq i, \pi^k \vDash \psi \\
+\pi^i \vDash \psi \mathrel{S_w} \varphi & \iff & \pi^i \vDash \psi \mathrel{S_s} \varphi \mbox{ or } \pi^i \vDash \boxdot\psi \\
+\pi^i \vDash \uparrow \psi & \iff & \pi^i \vDash \psi \mbox{ and } \pi^{i - 1} \nvDash \psi \\
+\pi^i \vDash \downarrow \psi & \iff & \pi^i \nvDash \psi \mbox{ and } \pi^{i - 1} \vDash \psi \\
+\pi^i \vDash [\psi, \varphi)_s & \iff & \exists j \mbox{ where } 0 \leq j \leq i, \pi^j \vDash \psi, \mbox{ and } \forall k \mbox{ where } j \leq k \leq i, \pi^k \nvDash \varphi \\
+\pi^i \vDash [\psi, \varphi)_w & \iff & \pi^i \vDash [\psi, \varphi)_s \mbox{ or } \pi^i \vDash \boxdot\neg\varphi \\
+\end{eqnarray*}
+
+\subsubsection{EAGLE}
+
+EAGLE \citep{barringer2004rule} is a temporal finite trace monitoring logic supporting parameterized equations by combining minimal/maximal fix-point semantics with temporal operators.
+
+Online runtime verification requires to accept incremental traces which means there are possible boundaries between traces. Minimal/maximal fix-point rules were designed to treat this problem. Before evaluating the next trace, the equations with maximal rules are required to be always right and the ones with minimal rules are only needed to be eventually right.
+
 \section{Runtime verification frameworks}\label{sec:rv:frameworks}
 
-In runtime verification, monitors are generated from formal specifications by runtime verification frameworks. There are four monitoring modes: offline, online, inline and outline. Many frameworks and systems using some variant or extension of LTL have been proposed, as Table \ref{table:rvframeworks} shows. 
+In runtime verification, monitors are generated from formal specifications by runtime verification frameworks. There are four monitoring modes: offline, online, inline and outline as we discussed in the early part of this section. Many frameworks and systems using some variant or extension of LTL have been proposed, as Table \ref{table:rvframeworks} shows. 
 
 \begin{table}[h]
 \centering
@@ -144,7 +196,7 @@ In runtime verification, monitors are generated from formal specifications by ru
 \hline
 Name & Logic & Mode \\
 \hline
-JPax\citep{havelund2001java} & LTL & outline \\
+JPax\citep{havelund2001java} & LTL \& Past-time LTL & outline \\
 \hline
 JavaMaC\citep{kim2004java} & Past-time LTL & outline \\
 \hline
